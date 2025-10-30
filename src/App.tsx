@@ -1,78 +1,36 @@
-import { useState } from "react";
-import "./App.css";
-import TaskCount from "./TaskCount";
-import AddTask from "./AddTask";
 
-import type { TaskProps } from "./Task";
-import Task from "./Task";
+import "./App.css";
+
+
+
+
+import Signup from "./Pages/SignUp";
+import Login from "./Pages/Login";
+import { Route, Routes, useNavigate,  } from "react-router-dom";
+import Home from "./Home";
+import Todo from "./Todo";
 
 function App() {
-  const [tasks, setTasks] = useState<TaskProps[]>([]);
-  const [text, setText] = useState("");
+  const navigate = useNavigate();
+  
 
-  const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-    console.log("text ", text);
-  };
+  const handleLogin = ()=>
+  {
+    navigate('/login')
+  }
 
-  const addTask = () => {
-    if (!text.trim()) return;
-
-    const task = { id: Date.now(), text: text, isChecked: false };
-    const newTask = [...tasks, task];
-    console.log("NEW Task to be added : ", newTask);
-    setTasks(newTask);
-    setText("");
-  };
-  const toggle = (id: number) => {
-    setTasks((tasks) =>
-      tasks.map((task) =>
-        task.id === id ? { ...task, isChecked: !task.isChecked } : task
-      )
-    );
-  };
-
-  const handleDelete = (id: number) => {
-    setTasks((objs) => objs.filter((task) => task.id !== id));
-  };
-
-  const handleEdit = (id: number, text: string) => {
-    setTasks((obj) =>
-      obj.map((task) => (task.id === id ? { ...task, text: text } : task))
-    );
-  };
-  const totalTask = tasks.length;
-  const doneTask = tasks.filter((obj) => {
-    return obj.isChecked;
-  }).length;
+  const handleSignUp = ()=>
+    {
+      navigate('/signup')
+    }
   return (
     <>
-      <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-        <div className="mx-auto max-w-2xl px-4 py-10 space-y-6">
-          <div>
-            <TaskCount doneTask={doneTask} totalTask={totalTask} />
-          </div>
-          <div>
-            <AddTask
-              text={text}
-              handleTask={addTask}
-              handleText={(e) => handleText(e)}
-            />
-          </div>
-
-          {tasks.map((task) => (
-            <Task
-            key={task.id}
-              id={task.id}
-              isChecked={task.isChecked}
-              text={task.text}
-              onToggle={() => toggle(task.id)}
-              onDelete={() => handleDelete(task.id)}
-              onEdit={(newtext)=>handleEdit(task.id, newtext)}
-            />
-          ))}
-        </div>
-      </div>
+    <Routes>
+      <Route path="/" element={<Home handleLogin={handleLogin} handleSignUp={handleSignUp}/>}></Route>
+      <Route path="/login" element={<Login/>}></Route>
+      <Route path="/signup" element={<Signup/>}></Route>
+      <Route path='/todo' element={<Todo/>}></Route>
+    </Routes>
     </>
   );
 }

@@ -12,7 +12,7 @@ export interface TaskProps {
   onEdit?: (nextText: string) => void;
 }
 
-const Task = ({text, isChecked, onToggle, onDelete, onEdit }: TaskProps) => {
+const Task = ({ text, isChecked, onToggle, onDelete, onEdit }: TaskProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(text);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -50,7 +50,11 @@ const Task = ({text, isChecked, onToggle, onDelete, onEdit }: TaskProps) => {
         </div>
 
         {!isEditing ? (
-          <div className={`flex-1 truncate ${isChecked ? "opacity-70 line-through" : "text-white/90"}`}>
+          <div
+            className={`flex-1 truncate ${
+              isChecked ? "opacity-70 line-through" : "text-white/90"
+            }`}
+          >
             {text}
           </div>
         ) : (
@@ -68,13 +72,8 @@ const Task = ({text, isChecked, onToggle, onDelete, onEdit }: TaskProps) => {
         )}
 
         <div className="flex items-center gap-2">
-          {!isEditing ? (
-            <button
-              className="px-3 py-1 rounded-lg bg-amber-400/20 text-amber-200 border border-amber-300/30 hover:bg-amber-400/30 transition"
-              onClick={() => setIsEditing(true)}
-            >
-              <Edit onEdit={() => {}} />
-            </button>
+          {!isEditing ? (            
+              <Edit onEdit={() => setIsEditing(true)} />
           ) : (
             <>
               <button
@@ -91,12 +90,8 @@ const Task = ({text, isChecked, onToggle, onDelete, onEdit }: TaskProps) => {
               </button>
             </>
           )}
-          <button
-            className="px-3 py-1 rounded-lg bg-rose-500/20 text-rose-200 border border-rose-400/30 hover:bg-rose-500/30 transition"
-            onClick={onDelete}
-          >
+
             <Delete handleDelete={onDelete!} />
-          </button>
         </div>
       </div>
     </div>

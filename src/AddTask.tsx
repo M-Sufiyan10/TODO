@@ -15,6 +15,7 @@ const AddTask = ({ handleText,handleTask ,text}: AddTaskType) => {
             value={text}
             placeholder="Add a new task"
             onChange={handleText}
+            onKeyDown={(e)=> {if(e.key === 'Enter') handleTask();}}
             
           />
         </div>

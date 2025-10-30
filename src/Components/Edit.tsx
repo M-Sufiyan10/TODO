@@ -6,7 +6,7 @@ interface EditProps
 }
 const Edit = ({onEdit}:EditProps) => {
   return (
-    <button onClick={onEdit}>
+    <button  className="px-3 py-1 rounded-lg bg-amber-400/20 text-amber-200 border border-amber-300/30 hover:bg-amber-400/30 transition" onClick={onEdit}>
         <FaEdit/>
     </button>
   )

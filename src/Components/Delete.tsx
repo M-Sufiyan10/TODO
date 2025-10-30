@@ -7,7 +7,7 @@ interface DeleteProps
 
 const Delete = ({handleDelete}:DeleteProps) => {
   return (
-    <button onClick={handleDelete}>
+    <button  className="px-3 py-1 rounded-lg bg-rose-500/20 text-rose-200 border border-rose-400/30 hover:bg-rose-500/30 transition" onClick={handleDelete}>
         <FaTrash/>
     </button>
   )
