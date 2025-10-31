@@ -3,6 +3,8 @@ import { useForm, type SubmitHandler } from 'react-hook-form'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
+import api from '../API/api'
+import toast from 'react-hot-toast'
 const LogInSchema = z.object({
     email:z.email('Email is required'),
     password:z.string().min(1,'Password is required')
@@ -11,15 +13,29 @@ type LogInTypes = z.infer<typeof LogInSchema>
 const Login = () => {
 
     const navigate = useNavigate();
-    const {register, handleSubmit,formState:{errors}} = useForm<LogInTypes>({
+    const {register, handleSubmit,formState:{errors }} = useForm<LogInTypes>({
         resolver:zodResolver(LogInSchema)
     });
 
-    const onSubmit: SubmitHandler<LogInTypes>=(data:LogInTypes)=>
+    const onSubmit: SubmitHandler<LogInTypes>= async (data:LogInTypes)=>
     {
-        console.log('LOG IN DATA: ',data)
-        navigate('/todo')
+      try{
+      const res = await api.post('/auth/login' , data, {withCredentials:true})
+      console.log("response data : ", res.data)
+      navigate('/todo')
+      }
+      
+      catch(err:any)
+      {
+        console.error("Login error:", err);
+        if (err.response && err.response.status === 401) {
+          toast.error("Invalid credentials. Please try again.");
+        } else {
+          toast.error("Something went wrong. Try again later.");
+        }
+      }
     }
+        
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
       <div className="w-full max-w-md">

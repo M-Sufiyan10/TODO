@@ -2,6 +2,8 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
+import api from "../API/api";
+import toast from "react-hot-toast";
 
 const SignUpSchema = z.object({
   firstName: z.string().min(1,'First Name required').regex(/^[A-Za-z]+$/, "Digits and Special Characters aren't allowed"),
@@ -24,9 +26,27 @@ const Signup = () => {
     formState: { errors },
   } = useForm<FormFields>({ resolver: zodResolver(SignUpSchema) });
 
-  const onSubmit: SubmitHandler<FormFields> = (data) => {
-    console.log("Submitted data :", data);
-    navigate('/todo')
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    try{
+      const res = await api.post('/auth/signup' , data)
+      console.log("response data : ", res.data)
+      navigate('/todo')
+      }
+      
+      catch(err:any)
+      {
+        console.error("SignUp error:", err);
+        if (err.response && err.response.status === 401) {
+          toast.error("Invalid credentials. Please try again.");
+        }
+        else if(err.response?.data?.message === 'Email is already registered')
+          {
+            toast.error("Email already registered"); 
+          } 
+        else {
+          toast.error("Something went wrong. Try again later.");
+        }
+      }
   };
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
